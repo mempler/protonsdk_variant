@@ -3,6 +3,9 @@ name = "protonsdk_variant"
 version = "0.1.0"
 authors = ["Robin A. P. <me@mempler.de>"]
 edition = "2018"
+license = "MIT"
+repository = "https://github.com/Mempler/protonsdk_variant"
+description = "ProtonSDK's Variant implementation in rust"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
