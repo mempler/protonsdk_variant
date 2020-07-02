@@ -16,6 +16,10 @@ impl VariantFunction {
         }
     }
 
+    pub fn indices(&self) -> usize {
+        self.args.len() + 1
+    }
+
     pub fn push_arg<V>(mut self, v: V) -> VariantFunction
         where V : Into<Variant>
     {
@@ -44,11 +48,9 @@ impl VariantFunction {
         where W :
             std::io::Write + std::io::Seek
     {
-        let indices = 1 + self.args.len();
-
         let mut i = 0;
 
-        w.write_u8(indices as u8)?;
+        w.write_u8(self.indices() as u8)?;
         w.write_u8(i)?;
         self.name.pack(w)?;
 
