@@ -4,20 +4,32 @@ use std::io::Cursor;
 
 #[derive(Debug)]
 pub struct VariantFunction {
-    name: Variant,
+    name: Option<Variant>,
     args: Vec<Variant>
 }
 
 impl VariantFunction {
     pub fn new<S: AsRef<str>>(name: S) -> VariantFunction {
         VariantFunction {
-            name: Variant::from(name.as_ref()),
+            name: Some(Variant::from(name.as_ref())),
+            args: Vec::new()
+        }
+    }
+
+    pub fn new_none() -> VariantFunction {
+        VariantFunction {
+            name: None,
             args: Vec::new()
         }
     }
 
     pub fn indices(&self) -> usize {
-        self.args.len() + 1
+        let mut i = 0;
+        if self.name.is_some() {
+            i = 1;
+        }
+
+        self.args.len() + i
     }
 
     pub fn push_arg<V>(mut self, v: V) -> VariantFunction
@@ -51,8 +63,12 @@ impl VariantFunction {
         let mut i = 0;
 
         w.write_u8(self.indices() as u8)?;
-        w.write_u8(i)?;
-        self.name.pack(w)?;
+
+        if self.name.is_some() {
+            w.write_u8(i)?;
+            self.name.as_ref().unwrap().pack(w)?;
+            i += 1;
+        }
 
         for arg in &self.args {
             w.write_u8(i)?;
